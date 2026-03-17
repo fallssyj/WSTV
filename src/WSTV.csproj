@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ApplicationIcon>Assets\icons\app.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).0</FileVersion>
+    <InformationalVersion>$(Version)</InformationalVersion>
+    <Product>WSTV</Product>
+    <Description>M3U 播放器</Description>
+    <Copyright>Copyright © 2026 syj</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\fonts\MiSans-Normal.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\icons\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="FlyleafLib" Version="3.10.2" />
+    <PackageReference Include="Flyleaf.FFmpeg.Bindings" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\fonts\MiSans-Normal.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="FFmpeg\avcodec-62.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="FFmpeg\avdevice-62.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="FFmpeg\avfilter-11.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="FFmpeg\avformat-62.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="FFmpeg\avutil-60.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="FFmpeg\swresample-6.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="FFmpeg\swscale-9.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
+
+</Project>

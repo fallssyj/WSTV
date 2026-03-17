@@ -1,0 +1,15 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 渐变背景 -->
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b4a" />
+      <stop offset="100%" stop-color="#9b4dff" />
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="30" ry="30" fill="url(#grad1)" />
+  
+  <!-- 白色W字母造型 -->
+  <path d="M28 40 L42 75 L60 48 L78 75 L92 40 L82 70 L78 80 L60 55 L42 80 L38 70 L28 40" 
+        fill="#ffffff" 
+        stroke="none" />
+</svg>

@@ -1,0 +1,67 @@
+﻿<Window
+    x:Class="WSTV.View.AppDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Width="360"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="NoResize"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None">
+
+    <Border
+        Background="{StaticResource BackgroundSecondaryBrush}"
+        BorderBrush="{StaticResource BorderSubtleBrush}"
+        BorderThickness="0.5"
+        CornerRadius="12">
+        <Grid Margin="24,20,24,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  图标 + 标题  -->
+            <StackPanel
+                Grid.Row="0"
+                Margin="0,0,0,12"
+                Orientation="Horizontal">
+                <Viewbox
+                    x:Name="IconBox"
+                    Width="20"
+                    Height="20"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center">
+                    <Path
+                        x:Name="IconPath"
+                        Data="{StaticResource CircleInfo}"
+                        Fill="{StaticResource AccentPrimaryBrush}"
+                        Stretch="Uniform" />
+                </Viewbox>
+                <TextBlock
+                    x:Name="TitleText"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    FontWeight="SemiBold"
+                    Foreground="{StaticResource TextPrimaryBrush}" />
+            </StackPanel>
+
+            <!--  消息正文  -->
+            <TextBlock
+                x:Name="MessageText"
+                Grid.Row="1"
+                Margin="0,0,0,20"
+                FontSize="13"
+                Foreground="{StaticResource TextSecondaryBrush}"
+                TextWrapping="Wrap" />
+
+            <!--  按钮区  -->
+            <StackPanel
+                x:Name="ButtonPanel"
+                Grid.Row="2"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal" />
+        </Grid>
+    </Border>
+</Window>

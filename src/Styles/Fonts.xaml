@@ -1,0 +1,5 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <FontFamily x:Key="MiSansRegular">
+        pack://application:,,,/WSTV;component/Assets/fonts/MiSans-Normal.ttf#MiSans
+    </FontFamily>
+</ResourceDictionary>

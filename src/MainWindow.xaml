@@ -1,0 +1,367 @@
+﻿<Window
+    x:Class="WSTV.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WSTV"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:WSTV.View"
+    xmlns:vm="clr-namespace:WSTV.ViewModels"
+    Title="{Binding Title}"
+    Width="500"
+    Height="800"
+    MinWidth="500"
+    MinHeight="600"
+    AllowsTransparency="True"
+    Background="Transparent"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <!--  页面切入动画：当 Grid 变为可见时触发淡入 + 上滑  -->
+        <Style x:Key="PageSlideStyle" TargetType="Grid">
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TranslateTransform />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsVisible, RelativeSource={RelativeSource Self}}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetProperty="Opacity"
+                                    From="0"
+                                    To="1"
+                                    Duration="0:0:0.22" />
+                                <DoubleAnimation
+                                    Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                    From="18"
+                                    To="0"
+                                    Duration="0:0:0.25">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseOut" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--  Tab 按钮：去除默认背景/边框，保留点击行为  -->
+        <Style x:Key="TabButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border
+        x:Name="RootBorder"
+        Background="{StaticResource BackgroundDeepBrush}"
+        BorderThickness="0"
+        CornerRadius="10"
+        MouseLeftButtonDown="OnWindowDragMove"
+        Style="{StaticResource RoundedWindowBorderStyle}">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Row="0"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Margin="0,0,0,0"
+                    Command="{Binding MinimizeCommand}"
+                    Content="{StaticResource minimize}"
+                    Style="{StaticResource IconButton}" />
+                <Button Command="{Binding MaximizeCommand}">
+                    <Button.Style>
+                        <Style BasedOn="{StaticResource IconButton}" TargetType="Button">
+                            <Setter Property="Content" Value="{StaticResource maximize}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMaximized}" Value="True">
+                                    <Setter Property="Content" Value="{StaticResource restore}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button
+                    Command="{Binding CloseCommand}"
+                    Content="{StaticResource close}"
+                    Style="{StaticResource CloseIconButton}" />
+            </StackPanel>
+            <!--  ===== 内容区域：预创建所有页面，通过 Visibility 切换，避免重建布局  =====  -->
+            <Grid Grid.Row="1">
+                <Grid Style="{StaticResource PageSlideStyle}" Visibility="{Binding IsChannelsActive, Converter={StaticResource BoolToVis}}">
+                    <views:ChannelsView DataContext="{Binding ChannelsPage}" />
+                </Grid>
+                <Grid Style="{StaticResource PageSlideStyle}" Visibility="{Binding IsFavoritesActive, Converter={StaticResource BoolToVis}}">
+                    <views:FavoritesView DataContext="{Binding FavoritesPage}" />
+                </Grid>
+                <Grid Style="{StaticResource PageSlideStyle}" Visibility="{Binding IsConfigActive, Converter={StaticResource BoolToVis}}">
+                    <views:ConfigView DataContext="{Binding ConfigPage}" />
+                </Grid>
+                <Grid Style="{StaticResource PageSlideStyle}" Visibility="{Binding IsSettingsActive, Converter={StaticResource BoolToVis}}">
+                    <views:SettingsView DataContext="{Binding SettingsPage}" />
+                </Grid>
+                <!--  关于页  -->
+                <Grid Style="{StaticResource PageSlideStyle}" Visibility="{Binding IsAboutActive, Converter={StaticResource BoolToVis}}">
+                    <views:AboutView DataContext="{Binding AboutPage}" />
+                </Grid>
+                <!--  播放页：每次通过 DataTemplate 重建，确保 FlyleafHost 渲染面干净  -->
+                <Grid Visibility="{Binding IsPlayActive, Converter={StaticResource BoolToVis}}">
+                    <ContentControl Content="{Binding PlayPage}" />
+                </Grid>
+            </Grid>
+
+            <!--  ===== 底部导航栏：播放时隐藏 =====  -->
+            <Border
+                Grid.Row="1"
+                Width="450"
+                Height="80"
+                Margin="20,0,20,20"
+                Padding="4,6,4,8"
+                VerticalAlignment="Bottom"
+                Background="{StaticResource BackgroundBaseBrush}"
+                BorderBrush="{StaticResource BorderSubtleBrush}"
+                BorderThickness="0.5"
+                CornerRadius="40"
+                Visibility="{Binding IsNavVisible, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  ── 频道 ──  -->
+                    <Button
+                        Grid.Column="0"
+                        Command="{Binding GoToChannelsCommand}"
+                        Style="{StaticResource TabButtonStyle}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <Border
+                                Padding="18,5"
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                CornerRadius="14">
+                                <Path
+                                    Width="25"
+                                    Height="25"
+                                    Data="{StaticResource Globe}"
+                                    Stretch="Uniform">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Fill" Value="{StaticResource TextPrimaryBrush}" />
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsChannelsActive}" Value="True">
+                                                    <Setter Property="Fill" Value="{StaticResource AccentPrimaryBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                            </Border>
+                            <TextBlock
+                                Margin="0,3,0,0"
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Text="频道">
+                                <TextBlock.Style>
+                                    <Style BasedOn="{StaticResource DefaultTextBlockStyle}" TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsChannelsActive}" Value="True">
+                                                <Setter Property="Foreground" Value="{StaticResource AccentPrimaryBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+
+                    <!--  ── 收藏 ──  -->
+                    <Button
+                        Grid.Column="1"
+                        Command="{Binding GoToFavoritesCommand}"
+                        Style="{StaticResource TabButtonStyle}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <Border
+                                Padding="18,5"
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                CornerRadius="14">
+                                <Path
+                                    Width="25"
+                                    Height="25"
+                                    Data="{StaticResource Heart}"
+                                    Stretch="Uniform">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Fill" Value="{StaticResource TextPrimaryBrush}" />
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFavoritesActive}" Value="True">
+                                                    <Setter Property="Fill" Value="{StaticResource AccentPrimaryBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                            </Border>
+                            <TextBlock
+                                Margin="0,3,0,0"
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Text="收藏">
+                                <TextBlock.Style>
+                                    <Style BasedOn="{StaticResource DefaultTextBlockStyle}" TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsFavoritesActive}" Value="True">
+                                                <Setter Property="Foreground" Value="{StaticResource AccentPrimaryBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+
+                    <!--  ── 配置 ──  -->
+                    <Button
+                        Grid.Column="2"
+                        Command="{Binding GoToConfigCommand}"
+                        Style="{StaticResource TabButtonStyle}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <Border
+                                Padding="18,5"
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                CornerRadius="14">
+                                <Path
+                                    Width="25"
+                                    Height="25"
+                                    Data="{StaticResource ViewColumn}"
+                                    RenderTransformOrigin="0.5,0.5"
+                                    Stretch="Uniform">
+                                    <Path.RenderTransform>
+                                        <ScaleTransform ScaleY="-1" />
+                                    </Path.RenderTransform>
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Fill" Value="{StaticResource TextPrimaryBrush}" />
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsConfigActive}" Value="True">
+                                                    <Setter Property="Fill" Value="{StaticResource AccentPrimaryBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+
+                            </Border>
+                            <TextBlock
+                                Margin="0,3,0,0"
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Text="配置">
+                                <TextBlock.Style>
+                                    <Style BasedOn="{StaticResource DefaultTextBlockStyle}" TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsConfigActive}" Value="True">
+                                                <Setter Property="Foreground" Value="{StaticResource AccentPrimaryBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+
+                    <!--  ── 设置 ──  -->
+                    <Button
+                        Grid.Column="3"
+                        Command="{Binding GoToSettingsCommand}"
+                        Style="{StaticResource TabButtonStyle}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <Border
+                                Padding="18,5"
+                                HorizontalAlignment="Center"
+                                Background="Transparent"
+                                CornerRadius="14">
+                                <Path
+                                    Width="25"
+                                    Height="25"
+                                    Data="{StaticResource Settings}"
+                                    Stretch="Uniform">
+                                    <Path.Style>
+                                        <Style TargetType="Path">
+                                            <Setter Property="Fill" Value="{StaticResource TextPrimaryBrush}" />
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSettingsActive}" Value="True">
+                                                    <Setter Property="Fill" Value="{StaticResource AccentPrimaryBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Path.Style>
+                                </Path>
+                            </Border>
+                            <TextBlock
+                                Margin="0,3,0,0"
+                                HorizontalAlignment="Center"
+                                FontSize="14"
+                                Text="设置">
+                                <TextBlock.Style>
+                                    <Style BasedOn="{StaticResource DefaultTextBlockStyle}" TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSettingsActive}" Value="True">
+                                                <Setter Property="Foreground" Value="{StaticResource AccentPrimaryBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+
+
+                </Grid>
+            </Border>
+            <!--  覆盖层边框：始终在最上层绘制 stroke，不被任何子元素背景覆盖  -->
+            <Border
+                x:Name="OverlayBorder"
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Panel.ZIndex="999"
+                BorderBrush="{StaticResource BorderDefaultBrush}"
+                BorderThickness="0.5"
+                CornerRadius="10"
+                IsHitTestVisible="False" />
+        </Grid>
+    </Border>
+</Window>
+

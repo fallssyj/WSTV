@@ -1,0 +1,237 @@
+﻿<UserControl
+    x:Class="WSTV.View.VideoInfoCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Border
+        Margin="10"
+        Background="{StaticResource BackgroundCardBrush}"
+        CornerRadius="15">
+        <Grid>
+            <ScrollViewer Margin="0,10,5,10" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                    <!--  频道图标（TvgLogo 为空时折叠）  -->
+                    <Image
+                        MaxHeight="50"
+                        HorizontalAlignment="Center"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Source="{Binding CurrentChannel.LogoImage}">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentChannel.TvgLogo}" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <!--  频道名称  -->
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="20"
+                        Text="{Binding CurrentChannel.DisplayName}"
+                        TextTrimming="CharacterEllipsis" />
+                    <!--  快速信息标签行  -->
+                    <StackPanel
+                        Margin="0,10,5,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Border
+                            Margin="0,5,5,0"
+                            Padding="10,2"
+                            Background="{StaticResource BackgroundSelectedBrush}"
+                            CornerRadius="8">
+                            <TextBlock>
+                                <Run Text="{Binding Player.Video.Width, Mode=OneWay}" />
+                                <Run Text="x" />
+                                <Run Text="{Binding Player.Video.Height, Mode=OneWay}" />
+                            </TextBlock>
+                        </Border>
+                        <Border
+                            Margin="0,5,5,0"
+                            Padding="10,2"
+                            Background="{StaticResource BackgroundSelectedBrush}"
+                            CornerRadius="8">
+                            <TextBlock Text="{Binding Player.Video.FPS, StringFormat={}{0} FPS}" />
+                        </Border>
+                        <Border
+                            Margin="0,5,5,0"
+                            Padding="10,2"
+                            Background="{StaticResource BackgroundSelectedBrush}"
+                            CornerRadius="8">
+                            <TextBlock Text="{Binding Player.Video.Codec}" />
+                        </Border>
+                        <Border
+                            Margin="0,5,5,0"
+                            Padding="10,2"
+                            Background="{StaticResource BackgroundSelectedBrush}"
+                            CornerRadius="8">
+                            <TextBlock Text="{Binding Player.Video.PixelFormat}" />
+                        </Border>
+                        <Border
+                            Margin="0,5,5,0"
+                            Padding="10,2"
+                            Background="{StaticResource BackgroundSelectedBrush}"
+                            CornerRadius="8">
+                            <TextBlock Text="{Binding AudioChannelLayoutText}" />
+                        </Border>
+                    </StackPanel>
+                    <!--  视频信息卡片  -->
+                    <TextBlock
+                        Margin="16,14,16,6"
+                        FontSize="12"
+                        Foreground="{StaticResource TextTertiaryBrush}"
+                        Text="视频信息" />
+                    <Border
+                        Margin="10,0"
+                        Background="{StaticResource BackgroundSecondaryBrush}"
+                        CornerRadius="10">
+                        <StackPanel>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="分辨率" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}">
+                                        <Run Text="{Binding Player.Video.Width, Mode=OneWay}" /><Run Text="x" /><Run Text="{Binding Player.Video.Height, Mode=OneWay}" />
+                                    </TextBlock>
+                                </Grid>
+                            </Border>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="编码格式" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding Player.Video.Codec}" />
+                                </Grid>
+                            </Border>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="码率" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding VideoBitRateText}" />
+                                </Grid>
+                            </Border>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="帧率" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding Player.Video.FPS, StringFormat={}{0:0.##} FPS}" />
+                                </Grid>
+                            </Border>
+                            <Grid Margin="16,11">
+                                <TextBlock FontSize="13" Text="动态范围" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    FontSize="13"
+                                    Foreground="{StaticResource TextSecondaryBrush}"
+                                    Text="{Binding VideoColorTypeText}" />
+                            </Grid>
+                            <Grid Margin="16,11">
+                                <TextBlock FontSize="13" Text="视频处理器" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    FontSize="13"
+                                    Foreground="{StaticResource TextSecondaryBrush}"
+                                    Text="{Binding Player.Renderer.VideoProcessor}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <!--  音频信息卡片  -->
+                    <TextBlock
+                        Margin="16,14,16,6"
+                        FontSize="12"
+                        Foreground="{StaticResource TextTertiaryBrush}"
+                        Text="音频信息" />
+                    <Border
+                        Margin="10,0,10,12"
+                        Background="{StaticResource BackgroundSecondaryBrush}"
+                        CornerRadius="10">
+                        <StackPanel>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="名称" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding AudioStreamName}" />
+                                </Grid>
+                            </Border>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="语言" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding AudioStreamLanguage}" />
+                                </Grid>
+                            </Border>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="编码格式" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding AudioStreamCodecText}" />
+                                </Grid>
+                            </Border>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="类型" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding AudioChannelLayoutText}" />
+                                </Grid>
+                            </Border>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="声道数" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding Player.Audio.Channels}" />
+                                </Grid>
+                            </Border>
+                            <Border BorderBrush="{StaticResource BorderSubtleBrush}" BorderThickness="0,0,0,0.5">
+                                <Grid Margin="16,11">
+                                    <TextBlock FontSize="13" Text="码率" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="13"
+                                        Foreground="{StaticResource TextSecondaryBrush}"
+                                        Text="{Binding AudioBitRateText}" />
+                                </Grid>
+                            </Border>
+                            <Grid Margin="16,11">
+                                <TextBlock FontSize="13" Text="采样率" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    FontSize="13"
+                                    Foreground="{StaticResource TextSecondaryBrush}"
+                                    Text="{Binding AudioSampleRateText}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

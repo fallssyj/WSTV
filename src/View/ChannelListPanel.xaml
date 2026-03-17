@@ -1,0 +1,90 @@
+﻿<UserControl
+    x:Class="WSTV.View.ChannelListPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:WSTV.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ScrollViewer>
+        <ItemsControl converters:ScrollToItemBehavior.ScrollToItem="{Binding CurrentChannel}" ItemsSource="{Binding FilteredChannels}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        BorderBrush="{StaticResource BorderSubtleBrush}"
+                        BorderThickness="0,0,0,0.5"
+                        Cursor="Hand">
+                        <Border.InputBindings>
+                            <MouseBinding
+                                Command="{Binding DataContext.SelectChannelCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}"
+                                MouseAction="LeftClick" />
+                        </Border.InputBindings>
+                        <Border.Background>
+                            <MultiBinding Converter="{StaticResource ObjEqToBgBrush}">
+                                <Binding Path="DataContext.CurrentChannel" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                <Binding />
+                            </MultiBinding>
+                        </Border.Background>
+                        <StackPanel Margin="12,10" Orientation="Horizontal">
+                            <!--  频道 Logo  -->
+                            <Border
+                                Width="40"
+                                Height="40"
+                                Margin="0,0,10,0"
+                                Padding="5"
+                                Background="{StaticResource BackgroundTertiaryBrush}"
+                                CornerRadius="4">
+                                <Grid>
+                                    <Image
+                                        RenderOptions.BitmapScalingMode="HighQuality"
+                                        Source="{Binding LogoImage}"
+                                        Stretch="Uniform">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding TvgLogo}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <Path
+                                        Width="15"
+                                        Height="15"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="{StaticResource Youtube}"
+                                        Fill="{StaticResource TextSecondaryBrush}"
+                                        Stretch="Uniform">
+                                        <Path.Style>
+                                            <Style TargetType="Path">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding TvgLogo}" Value="">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Path.Style>
+                                    </Path>
+                                </Grid>
+                            </Border>
+                            <!--  频道名  -->
+                            <TextBlock VerticalAlignment="Center" Text="{Binding DisplayName}">
+                                <TextBlock.Foreground>
+                                    <MultiBinding Converter="{StaticResource ObjEqToFgBrush}">
+                                        <Binding Path="DataContext.CurrentChannel" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                        <Binding />
+                                    </MultiBinding>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,97 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="CheckBox">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="FontFamily" Value="{StaticResource MiSansRegular}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <BulletDecorator VerticalAlignment="Center" Background="Transparent">
+                        <BulletDecorator.Bullet>
+                            <!--  勾选框  -->
+                            <Border
+                                x:Name="Box"
+                                Width="16"
+                                Height="16"
+                                Background="Transparent"
+                                BorderBrush="{StaticResource BorderDefaultBrush}"
+                                BorderThickness="1.5"
+                                CornerRadius="4">
+                                <Path
+                                    x:Name="CheckMark"
+                                    Width="9"
+                                    Height="7"
+                                    Data="M 0,3.5 L 3,6.5 L 9,0"
+                                    Stretch="Uniform"
+                                    Stroke="{StaticResource TextOnAccentBrush}"
+                                    StrokeEndLineCap="Round"
+                                    StrokeLineJoin="Round"
+                                    StrokeStartLineCap="Round"
+                                    StrokeThickness="1.8"
+                                    Visibility="Collapsed" />
+                            </Border>
+                        </BulletDecorator.Bullet>
+
+                        <!--  标签文字  -->
+                        <ContentPresenter
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True"
+                            TextBlock.FontFamily="{TemplateBinding FontFamily}"
+                            TextBlock.FontSize="{TemplateBinding FontSize}"
+                            TextBlock.Foreground="{TemplateBinding Foreground}" />
+                    </BulletDecorator>
+
+                    <ControlTemplate.Triggers>
+
+                        <!--  鼠标悬停（未选中）  -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsChecked" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource BorderFocusBrush}" />
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource BackgroundTertiaryBrush}" />
+                        </MultiTrigger>
+
+                        <!--  已选中  -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource AccentPrimaryBrush}" />
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource AccentPrimaryBrush}" />
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <!--  鼠标悬停（已选中）：稍微加深  -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True" />
+                                <Condition Property="IsChecked" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Box" Property="Opacity" Value="0.82" />
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource AccentPrimaryBrush}" />
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource AccentPrimaryBrush}" />
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                        </MultiTrigger>
+
+                        <!--  按下  -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Box" Property="Opacity" Value="0.65" />
+                        </Trigger>
+
+                        <!--  禁用  -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.38" />
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

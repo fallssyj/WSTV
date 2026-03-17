@@ -1,0 +1,134 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="CaretBrush" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="SelectionBrush" Value="{StaticResource AccentPrimaryBrush}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="SelectionOpacity" Value="0.35" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontFamily" Value="{StaticResource MiSansRegular}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border
+                        x:Name="Root"
+                        Background="{StaticResource BackgroundSecondaryBrush}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="0.5"
+                        CornerRadius="8">
+                        <Grid>
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Margin="4,0"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                Focusable="False" />
+                            <TextBlock
+                                x:Name="Placeholder"
+                                Margin="8,0"
+                                VerticalAlignment="Center"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Foreground="{StaticResource TextPlaceholderBrush}"
+                                IsHitTestVisible="False"
+                                Text="{TemplateBinding Tag}"
+                                Visibility="Collapsed" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource AccentPrimaryBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource BorderFocusBrush}" />
+                        </Trigger>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  标准圆角输入框（显式 key）  -->
+    <Style
+        x:Key="ModernTextBoxStyle"
+        BasedOn="{StaticResource {x:Type TextBox}}"
+        TargetType="TextBox" />
+
+    <!--  搜索胶囊输入框  -->
+    <Style x:Key="SearchTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="CaretBrush" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="SelectionBrush" Value="{StaticResource AccentPrimaryBrush}" />
+        <Setter Property="SelectionOpacity" Value="0.35" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderSubtleBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontFamily" Value="{StaticResource MiSansRegular}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border
+                        x:Name="Root"
+                        Background="{StaticResource BackgroundSecondaryBrush}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="0.5"
+                        CornerRadius="20">
+                        <Grid>
+                            <!--  搜索图标  -->
+                            <Path
+                                Width="15"
+                                Height="15"
+                                Margin="12,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Data="{StaticResource Search}"
+                                Fill="{StaticResource TextPlaceholderBrush}"
+                                Stretch="Uniform" />
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Margin="36,10,12,10"
+                                Padding="0"
+                                VerticalAlignment="Center"
+                                Focusable="False" />
+                            <TextBlock
+                                x:Name="Placeholder"
+                                Margin="40,10,12,10"
+                                VerticalAlignment="Center"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Foreground="{StaticResource TextPlaceholderBrush}"
+                                IsHitTestVisible="False"
+                                Text="{TemplateBinding Tag}"
+                                Visibility="Collapsed" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource AccentPrimaryBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource BorderFocusBrush}" />
+                        </Trigger>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
